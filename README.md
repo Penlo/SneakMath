@@ -39,7 +39,7 @@ The Tesseract OCR executable is included within the `Tesseract-OCR` folder in th
 Ensure it's running and in focus.
 
 2. **Run the Script**
-```python main.py```
+```python sneakmath.py```
 
 3. **Wait for the Magic ✨**
 
