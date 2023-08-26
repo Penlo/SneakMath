@@ -17,6 +17,30 @@ A Python-based automation tool that captures specific math problems from the bot
 - `pytesseract`
 - `Pillow`
 
+## 🐍 Installing Python 3.8
+
+SneakMath requires Python 3.8 to run. If you haven't already installed it, follow the instructions below:
+
+### Windows OS
+
+1. **Download the Installer**
+
+   Visit the [official Python downloads page](https://www.python.org/downloads/release/python-386/) and download the installer for Python 3.8.6
+
+2. **Run the Installer**
+
+   Launch the installer. Ensure that you check the box that says ✔️ "**Add Python 3.8 to PATH**" at the bottom. This makes it easier to run Python from the command prompt.
+
+3. **Installation**
+
+   Click on `Install Now` and wait for the installation to complete.
+
+4. **Verify Installation**
+
+   Open a new command prompt or terminal window and type: `python --version`
+   You should see `Python 3.8.x` displayed.
+
+
 ## 🛠 Installation
 
 1. **Clone the Repository**
