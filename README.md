@@ -25,17 +25,17 @@ SneakMath requires Python 3.8 to run. If you haven't already installed it, follo
 
 1. **Download the Installer**
 
-   Visit the [official Python downloads page](https://www.python.org/downloads/release/python-386/) and download the installer for Python 3.8.6
+   Visit the [official Python downloads page](https://www.python.org/downloads/release/python-386/) and download the installer for Python 3.8.6. **NOTE:** scroll down to the Files section and download one of the installers, The easiest and most straight forward installer is the `Windows x86-64 web-based installer`
 
-2. **Run the Installer**
+3. **Run the Installer**
 
    Launch the installer. Ensure that you check the box that says ✔️ "**Add Python 3.8 to PATH**" at the bottom. This makes it easier to run Python from the command prompt.
 
-3. **Installation**
+4. **Installation**
 
    Click on `Install Now` and wait for the installation to complete.
 
-4. **Verify Installation**
+5. **Verify Installation**
 
    Open a new command prompt or terminal window and type: `python --version`
    You should see `Python 3.8.x` displayed.
