@@ -1,21 +1,26 @@
 import datetime
 import re
 import time
-
 import pyautogui
 import pytesseract
 from PIL import ImageGrab
 from pynput.keyboard import Controller, Key
 
-keyboard = Controller()
+# constants
+pytesseract.pytesseract.tesseract_cmd = './Tesseract-OCR/tesseract.exe'
 
-pytesseract.pytesseract.tesseract_cmd = './Tesseract-OCR/tesseract.exe'  # tesseract executable path
+# adjustable variables
+percentage_of_width_to_capture_from_bottom_left_corner = 0.25 # example: 1920px * 0.25 = 480px
+percentage_of_height_to_capture_from_bottom_left_corner = 0.25 # example: 1080px * 0.25 = 270px
+time_before_next_capture = 1 # increase to reduce CPU usage, decrease to increase CPU usage
+time_before_writing_answer = 0.15
+time_before_pressing_enter = 0.1
 
 
 def capture_screen_region():
     screen_width, screen_height = pyautogui.size()
-    region_width = int(screen_width * 0.25)  # Adjust as needed depending on your screen size
-    region_height = int(screen_height * 0.25)  # Adjust as needed depending on your screen size
+    region_width = int(screen_width * percentage_of_width_to_capture_from_bottom_left_corner)
+    region_height = int(screen_height * percentage_of_height_to_capture_from_bottom_left_corner)
 
     return ImageGrab.grab(bbox=(0, screen_height - region_height, region_width, screen_height))
 
@@ -23,24 +28,24 @@ def capture_screen_region():
 def extract_and_solve_expression(screen_region):
     extracted_text = pytesseract.image_to_string(screen_region)
 
-    # Search for the pattern in the extracted text
+    # search for the pattern in the extracted text
     match = re.search(r'\[SNK.SRV\] (\d+) ([+-/*]) (\d+) = \?\?', extracted_text)
+    if not match return None
 
-    if match:
-        num1, operator, num2 = int(match.group(1)), match.group(2), int(match.group(3))
+    num1, operator, num2 = int(match.group(1)), match.group(2), int(match.group(3))
 
-        if operator == '+':
-            return num1 + num2
-        elif operator == '-':
-            return num1 - num2
-        elif operator == '*':
-            return num1 * num2
-        elif operator == '/':
-            return num1 / num2 if num2 != 0 else "Division by zero"
-    return None
+    operations = {
+        '+': num1 + num2,
+        '-': num1 - num2,
+        '*': num1 * num2,
+        '/': num1 / num2 if num2 != 0 else "Division by zero"
+    }
+    
+    return operations[operator]
 
 
 def main():
+    keyboard = Controller()
     last_answered = None
 
     while True:
@@ -48,27 +53,26 @@ def main():
         screen_region = capture_screen_region()
         answer = extract_and_solve_expression(screen_region)
 
+        # note: it is possible that the next question has the same answer again, this means automatic answer will not trigger
         if answer is not None and answer != last_answered:
             print(f"[{current_time}] Pattern found! The answer is: {answer}")
 
-            # Simulate key presses and typing
+            # simulate key presses and typing
             keyboard.press('y')
             keyboard.release('y')
-            time.sleep(0.15)  # Adjust the delay based on game's response time
+            time.sleep(time_before_writing_answer)
 
-            # Type the answer and press Enter
+            # type the answer and press enter
             keyboard.type(str(int(answer)))
-            time.sleep(0.1)
+            time.sleep(time_before_pressing_enter)
             keyboard.press(Key.enter)
             keyboard.release(Key.enter)
 
-            # Update the last_answered
+            # update the last_answered
             last_answered = answer
 
-        # sleep for 1 seconds before checking again
-        # increase the value if you want to reduce CPU usage
-        # decrease the value if your CPU is fast enough
-        time.sleep(1)
+        # sleep before checking again
+        time.sleep(time_before_next_capture)
 
 
 if __name__ == "__main__":
